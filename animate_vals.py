@@ -304,9 +304,9 @@ def g(PLAYVAL):
     gameId = play['gameId']
     #bigLos = play['LOS']
     gameInfo = games_df.query('gameId == %s' % gameId)
-    trackingfilename = 'tracking_week_1.csv' #'tracking_gameId_' + str(gameId) + '.csv'
+    trackingfilename = 'tracking_week_1.parquet' #'tracking_gameId_' + str(gameId) + '.csv'
 
-    game_df = pd.read_csv(trackingfilename)
+    game_df = pd.read_parquet(trackingfilename)
     game_play_df = game_df.query('(playId == @playId) & (gameId == @gameId)')
     direction = game_play_df["playDirection"].iloc[0] #'GOING RIGHT'
     print(game_play_df['event'].unique())
