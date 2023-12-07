@@ -3,13 +3,13 @@ import ipywidgets as widgets
 import matplotlib as plt
 import pandas as pd
 import plotly.graph_objs as go
-from plotly.grid_objs import Grid, Column
+#from plotly.grid_objs import Grid, Column
 from plotly.offline import download_plotlyjs, init_notebook_mode, iplot, iplot_mpl, plot
 import math
 import copy
 import sys
 
-pathval = sys.argv[1]
+#pathval = sys.argv[1]
 
 def makePlayerShapes(home,away,direction):
     dbs = []
@@ -31,7 +31,7 @@ def makePlayerShapes(home,away,direction):
         to_add = True
         for lel2 in newthing:
             if(abs(lel[1] - lel2[1]) < 7.5):
-                if(direction == "GOING RIGHT"):
+                if(direction == "right"):
                     if(lel[0] < lel2[0]):
                         to_add = False
                 else:
@@ -48,7 +48,7 @@ def makePlayerShapes(home,away,direction):
             except:
                 tnext = None
             
-            if(direction == "GOING RIGHT"):
+            if(direction == "right"):
             
                 if(tnext != None): 
                     recs.append(  (tnow[0]-2,0,120,(tnow[1] +tnext[1])/2, tnow[2])   )
@@ -62,7 +62,7 @@ def makePlayerShapes(home,away,direction):
         elif(i == len(thing)-1):
             tnow = thing[i]
             tprev = thing[i-1]
-            if(direction == "GOING RIGHT"):
+            if(direction == "right"):
 
 
                 recs.append(   (tnow[0]-2,(tnow[1]+tprev[1])/2,120,54   , tnow[2]))
@@ -73,7 +73,7 @@ def makePlayerShapes(home,away,direction):
             tnow = thing[i]
             tprev = thing[i-1]
             tnext = thing[i+1]
-            if(direction == "GOING RIGHT"):
+            if(direction == "right"):
                 
                 recs.append(  (tnow[0]-2,(tnow[1]+tprev[1])/2,120,(tnow[1] +tnext[1])/2   , tnow[2]))
             else:
@@ -115,7 +115,7 @@ def makeDefenseZones(LOS,direction,numzonesWide,numzonesDeep):
         }
         }
     shapes.append(rect)
-    if(direction == "GOING LEFT"):
+    if(direction == "left"):
         
         color = 'rgb(127,187,34)'
         for x in range(1,numzonesWide):
@@ -186,9 +186,9 @@ def makeDefenseZones(LOS,direction,numzonesWide,numzonesDeep):
     return shapes
 
 
-plays_df = pd.read_csv(pathval + '/pass_plays.csv')
-games_df = pd.read_csv(pathval + '/games.csv')
-player_info = pd.read_csv(pathval + '/players.csv')
+plays_df = pd.read_csv('plays.csv')
+games_df = pd.read_csv('games.csv')
+player_info = pd.read_csv('players.csv')
 
 
 #@interact(PLAYVAL="10")
@@ -295,20 +295,20 @@ def g(PLAYVAL):
     )
 
     #play = plays_df.iloc[int(PLAYVAL)]
-    kk1 = input("Enter gameId \n")
-    kk2 = input("Enter playId \n")
+    kk1 = int(input("Enter gameId \n"))
+    kk2 = int(input("Enter playId \n"))
     play = plays_df[(plays_df['gameId'] == kk1) & (plays_df['playId'] == kk2)].iloc[0]
     print(play)
 
     playId = play['playId']
     gameId = play['gameId']
-    bigLos = play['LOS']
+    #bigLos = play['LOS']
     gameInfo = games_df.query('gameId == %s' % gameId)
-    trackingfilename = '/tracking_gameId_' + str(gameId) + '.csv'
+    trackingfilename = 'tracking_week_1.csv' #'tracking_gameId_' + str(gameId) + '.csv'
 
-    game_df = pd.read_csv(pathval + trackingfilename)
-    game_play_df = game_df.query('playId == %s' % playId)
-    direction = play["POSS_DIR"]
+    game_df = pd.read_csv(trackingfilename)
+    game_play_df = game_df.query('(playId == @playId) & (gameId == @gameId)')
+    direction = game_play_df["playDirection"].iloc[0] #'GOING RIGHT'
     print(game_play_df['event'].unique())
 
 
@@ -316,7 +316,10 @@ def g(PLAYVAL):
 
     play_info ={}
     lastname = ''
-    playlengthframes = 0
+    playlengthframes = game_play_df['frameId'].max()
+
+    game_play_df['frameId'].value_counts()
+
     home_team = gameInfo['homeTeamAbbr'].iloc[0]
     away_team = gameInfo['visitorTeamAbbr'].iloc[0]
 
@@ -350,19 +353,20 @@ def g(PLAYVAL):
         currname = game_play_df.iloc[x]['displayName']
         #print(game_play_df.iloc[x]['team'])
         if(currname == lastname):
+
             play_info[currname].append((game_play_df.iloc[x]['x'],
                                         game_play_df.iloc[x]['y'],
-                                        game_play_df.iloc[x]['team'],
+                                        game_play_df.iloc[x]['club'],
                                         game_play_df.iloc[x]['jerseyNumber'],
-                                        game_play_df.iloc[x]['event'],playerInfo['PositionAbbr']))
+                                        game_play_df.iloc[x]['event'],playerInfo['position']))
         else:
-            if(lastname != ''): 
-                playlengthframes = len(play_info[lastname])
+            #if(lastname != ''): 
+            #   playlengthframes = len(play_info[lastname])
             play_info[currname] = [(game_play_df.iloc[x]['x'],
                                     game_play_df.iloc[x]['y'],
-                                    game_play_df.iloc[x]['team'],
+                                    game_play_df.iloc[x]['club'],
                                     game_play_df.iloc[x]['jerseyNumber'],
-                                    game_play_df.iloc[x]['event'],playerInfo['PositionAbbr'])]
+                                    game_play_df.iloc[x]['event'],playerInfo['position'])]
 
         lastname = currname
         
@@ -370,6 +374,9 @@ def g(PLAYVAL):
     los = None
     frames = []
     ball_thrown = False
+
+    print(len(play_info["A'Shawn Robinson"]))
+
     for c in range(playlengthframes):
         frame = {'data' : [], 'name': c}
         home = {'x' : [], 'y' : [], 'text' : []}
@@ -382,7 +389,7 @@ def g(PLAYVAL):
         for p in sorted(play_info):
             if(checkevent == False):
                 try:
-                    b = math.isnan(play_info[p][c][4])
+                    b = math.isnan(play_info[f'{p}'][c][4])
                 except:
                     b = False
                 if(b):
@@ -406,7 +413,7 @@ def g(PLAYVAL):
                         size=10,
                         color='#ffffff')
                 checkEvent = True
-            if play_info[p][c][2] == 'home':
+            if play_info[p][c][2] == home_team:
                 home['x'].append(play_info[p][c][0])
                 home['y'].append(play_info[p][c][1])
                 home['text'].append(int(play_info[p][c][3]))
@@ -417,7 +424,7 @@ def g(PLAYVAL):
                         size=10,
                         color='#ffffff'
                 )
-            elif play_info[p][c][2] == 'away': 
+            elif play_info[p][c][2] == away_team: 
                 away['x'].append(play_info[p][c][0])
                 away['y'].append(play_info[p][c][1])
                 away['text'].append(int(play_info[p][c][3]))
@@ -438,6 +445,7 @@ def g(PLAYVAL):
                 ball['marker'] = {'color' : 'brown', 'size' : 10}
                 ball['name'] = 'Ball'
         
+        ball_thrown = True
         if (not ball_thrown):
             player_shapes = makePlayerShapes(home,away,direction)
         else:
