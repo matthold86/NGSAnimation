@@ -1,9 +1,13 @@
-# NGS Animation
+## NFL Next Gen Stats Animation (*Work In Progress*)
 
-Download the python file called animate_vals.py. 
+Clone this repository and run `animate_vals.py`
 
-The path to the Big-Data-Bowl data would need to be provided as an input to the call. Use the following command to run the file. 
+Two inputs required from the user: `gameId` and `playId`. 
 
-```
-python animate_vals.py path_to_/data/from/big-data-bowl-2019
-```
+The data is read directly from the csv and parquet files in this repository (`games.csv`, `plays.csv`, `players.csv`, `tracking_week_1.parquet`).
+
+Enter a `gameId` and `playId` found in `tracking_week_1.parquet`. For example:
+
+`gameId`: 2022090800
+
+`playId`: 56
