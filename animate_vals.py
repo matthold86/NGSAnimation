@@ -185,14 +185,6 @@ def makeDefenseZones(LOS,direction,numzonesWide,numzonesDeep):
 
     return shapes
 
-
-plays_df = pd.read_csv('plays.csv')
-games_df = pd.read_csv('games.csv')
-player_info = pd.read_csv('players.csv')
-
-
-#@interact(PLAYVAL="10")
-opts = [x for x in range(len(plays_df))]
 def g(PLAYVAL):
     midpoint_trace = go.Scatter(
     x = [60],
@@ -470,7 +462,14 @@ def g(PLAYVAL):
           #'data' : [yardlabels]
     }
 
-    plot(figure)
-    return (PLAYVAL)
+    #plot(figure)
+    return (figure)
 
-g(2)
+plays_df = pd.read_csv('plays.csv')
+games_df = pd.read_csv('games.csv')
+player_info = pd.read_csv('players.csv')
+
+#@interact(PLAYVAL="10")
+opts = [x for x in range(len(plays_df))]
+fig = g(2)
+plot(fig)
