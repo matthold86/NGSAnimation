@@ -28,9 +28,12 @@ def main():
 
     # player_info = sqlQuery(cursor, 'nfl_players_2023', gameId, playId)
 
-    # PLAYVAL = 2
+    plays_df = pd.read_csv('plays.csv')
+    games_df = pd.read_csv('games.csv')
+    player_info = pd.read_csv('players.csv')
+    game_df = pd.read_parquet('tracking_week_1.parquet')
 
-    fig = g(PLAYVAL)
+    fig = g(plays_df, games_df, player_info, game_df)
 
     plot(fig)
 

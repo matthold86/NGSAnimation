@@ -97,7 +97,7 @@ def makePlayerShapes(home,away,direction):
         shapes.append(rect)
     return shapes
 
-def g(PLAYVAL):
+def g(plays_df, games_df, player_info, game_df):
     midpoint_trace = go.Scatter(
     x = [60],
     y = [53.3/2]
@@ -377,11 +377,12 @@ def g(PLAYVAL):
     #plot(figure)
     return (figure)
 
-plays_df = pd.read_csv('plays.csv')
-games_df = pd.read_csv('games.csv')
-player_info = pd.read_csv('players.csv')
+if __name__ == "__main__":
+    plays_df = pd.read_csv('plays.csv')
+    games_df = pd.read_csv('games.csv')
+    player_info = pd.read_csv('players.csv')
+    game_df = pd.read_parquet('tracking_week_1.parquet')
 
-#@interact(PLAYVAL="10")
-opts = [x for x in range(len(plays_df))]
-fig = g(2)
-plot(fig)
+    opts = [x for x in range(len(plays_df))]
+    fig = g(plays_df, games_df, player_info, game_df)
+    print(plot(fig, include_plotlyjs=False, output_type='div'))
