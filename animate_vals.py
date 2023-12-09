@@ -1,6 +1,3 @@
-from ipywidgets import interact, interactive, fixed, interact_manual
-import ipywidgets as widgets
-import matplotlib as plt
 import pandas as pd
 import plotly.graph_objs as go
 #from plotly.grid_objs import Grid, Column
@@ -98,91 +95,6 @@ def makePlayerShapes(home,away,direction):
         'fillcolor' : color,
         }
         shapes.append(rect)
-    return shapes
-
-def makeDefenseZones(LOS,direction,numzonesWide,numzonesDeep):
-    shapes = []
-    rect = {
-        'type': 'rect',
-        'layer' : 'below',
-        'x0': 0,
-        'y0': 54,
-        'x1': LOS,
-        'y1':  0,
-        'line': {
-            'color': 'rgba(0,0,255,1)',
-            'width': 1
-        }
-        }
-    shapes.append(rect)
-    if(direction == "left"):
-        
-        color = 'rgb(127,187,34)'
-        for x in range(1,numzonesWide):
-            rect = {
-                'type': 'rect',
-                'layer' : 'below',
-                'x0': 0,
-                'y0': x*(54/numzonesWide),
-                'x1': LOS,
-                'y1':  x*(54/numzonesWide),
-                'line': {
-                    'color': 'rgba(255,105,180,1)',
-                    'width': 1
-                },
-                'fillcolor' : color,
-                }
-            shapes.append(rect)
-
-        if(LOS > 21):
-            for x in range(1,numzonesDeep):
-                rect = {
-                'type': 'rect',
-                'layer' : 'below',
-                'x0': LOS-7*x,
-                'y0': 0,
-                'x1': LOS-7*x,
-                'y1': 54,
-                'line': {
-                    'color': 'rgba(255,105,180,1)',
-                    'width': 1
-                },
-                'fillcolor' : color,
-                }
-                shapes.append(rect)
-        color = 'rgb(127,187,34)'
-    else:
-        for x in range(1,numzonesWide):
-            rect = {
-                'type': 'rect',
-                'layer' : 'below',
-                'x0': LOS,
-                'y0': x*(54/numzonesWide),
-                'x1': 120,
-                'y1':  x*(54/numzonesWide),
-                'line': {
-                    'color': 'rgba(255,105,180,1)',
-                    'width': 1
-                }
-                }
-            shapes.append(rect)
-
-        if(120 - LOS > 21):
-            for x in range(1,numzonesDeep):
-                rect = {
-                'type': 'rect',
-                'layer' : 'below',
-                'x0': LOS+7*x,
-                'y0': 0,
-                'x1': LOS+7*x,
-                'y1': 54,
-                'line': {
-                    'color': 'rgba(255,105,180,1)',
-                    'width': 1
-                },
-                }
-                shapes.append(rect)
-
     return shapes
 
 def g(PLAYVAL):
