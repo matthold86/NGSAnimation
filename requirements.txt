@@ -13,5 +13,7 @@ uvicorn==0.18.3
 flask
 matplotlib
 plotly
-math
-copy
+#sqlconnection
+databricks-sql-connector
+urllib3
+python-dotenv

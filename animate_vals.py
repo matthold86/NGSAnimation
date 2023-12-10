@@ -97,7 +97,7 @@ def makePlayerShapes(home,away,direction):
         shapes.append(rect)
     return shapes
 
-def g(plays_df, games_df, player_info, game_df):
+def g(plays_df, games_df, player_info, game_df, gameId, playId):
     midpoint_trace = go.Scatter(
     x = [60],
     y = [53.3/2]
@@ -199,13 +199,13 @@ def g(plays_df, games_df, player_info, game_df):
     )
 
     #play = plays_df.iloc[int(PLAYVAL)]
-    kk1 = int(input("Enter gameId \n"))
-    kk2 = int(input("Enter playId \n"))
-    play = plays_df[(plays_df['gameId'] == kk1) & (plays_df['playId'] == kk2)].iloc[0]
-    print(play)
+    #kk1 = int(input("Enter gameId \n"))
+    #kk2 = int(input("Enter playId \n"))
+    play = plays_df[(plays_df['gameId'] == gameId) & (plays_df['playId'] == playId)].iloc[0]
+    #print(play)
 
-    playId = play['playId']
-    gameId = play['gameId']
+    #playId = play['playId']
+    #gameId = play['gameId']
     #bigLos = play['LOS']
     gameInfo = games_df.query('gameId == %s' % gameId)
     trackingfilename = 'tracking_week_1.parquet' #'tracking_gameId_' + str(gameId) + '.csv'
